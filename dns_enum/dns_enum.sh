@@ -18,9 +18,6 @@ if [ -e "tmp.usage" ]; then
 	exit
 fi
 
-#Check hosts in file with some basic regex
-
-
 #parse and print output
 while IFS='' read -r host || [[ -n "$host" ]]; do
 	echo ""
