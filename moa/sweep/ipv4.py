@@ -13,11 +13,9 @@ class IPV4(object):
         self.octects = self.matches.groups()[:4]
         self.mask =  int(self.matches.group(5))
         self.numberOfIpAdresses = 2**(32 - self.mask)
-def loopThroughIpAddresses(self):
+def sweep(self):
 
-    numofip = numberOfIpAdresses(mask)
-
-    for i in range(numofip):
+    for i in range(self.numberOfIpAdresses):
         if(octects[3] > 255):
             octects[3] = 0
             octects[2] += 1
