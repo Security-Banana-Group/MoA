@@ -49,14 +49,16 @@ param(
 
 if ($ip -match '-'){
     $range = $ip.split("-")
-    return $range[0]
+    #$real = [Net.IPAddress]::Parse($leef)
+    
 }
 
 
-
 if ($ip -match '/'){
-    $range = $ip.split("/")
-    return $range
+    $s1 = $ip.split("/")
+    #return [System.Net.IPAddress]::Parse($s1)
+    
+
 }
 
 }
