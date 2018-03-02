@@ -6,7 +6,7 @@ except ImportError:
     from distutils.core import setup , find_packages
 
 
-I
+
 
 setup(name='MoA',
       version='0.1',
@@ -15,7 +15,7 @@ setup(name='MoA',
       author='EVT RIT',
       author_email='peaches@RIT.EDU',
       packages=find_packages(),
-      scripts= ['bin/cansetup'],
+      scripts= [],
       license='MIT',
       include_package_data=False,
       package_data={ '': ['*.txt', '*.rst']},
