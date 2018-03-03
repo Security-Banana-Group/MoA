@@ -28,13 +28,12 @@ def performPing(destination):
     ping_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW,ICMP_CODE)
     ping_socket.settimeout(2)
 
-    ping_socket.sendto(ping.msg,(destination, 1))
+    ping_socket.sendto(ICMP.build_echo_request(),(destination, 1))
     try:
-        pmsg = ping_socket.recv(16)
+        pmsg = ping_socket.recv(64)[20:]
     except socket.timeout:
         print("Error, timeout")
-
-    print(ICMP.icmp_from_raw(pmsg))
+    print(ICMP.icmp_from_raw(pmsg).checksum)
 
 
 #   sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
