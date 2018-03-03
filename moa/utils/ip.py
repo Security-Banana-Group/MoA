@@ -57,7 +57,10 @@ class ICMP(object):
 
     @classmethod
     def _generate_checksum(cls,checksumHeader,data):
+        """
+        Note this implmenetation is taken from RFC 1071.
 
+        """
         def carry_around_add(a, b):
             c = a + b
             return (c & 0xffff) + (c >> 16)

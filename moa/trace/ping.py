@@ -5,9 +5,6 @@ import sys
 import time
 from moa.utils.ip import IPV4, ICMP
 
-
-
-
 ICMP_CODE = socket.getprotobyname('icmp')
 
 """
@@ -16,25 +13,17 @@ First we will generate the checksum for the ip packet.
 Lets just support little endian.
 Note this implmenetation is taken from RFC 1071.
 """
+class PingManager(object):
+    def __init__(self,timeout=1):
+        self.ping_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW,ICMP_CODE)
+        self.ping_socket.settimeout(timeout)
 
 
-def initSocket():
-    pass
-
-def performPing(destination):
-    destIpv4 = IPV4(destination)
-    ping = ICMP()
-    pmsg = None
-    ping_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW,ICMP_CODE)
-    ping_socket.settimeout(2)
-
-    ping_socket.sendto(ICMP.build_echo_request(),(destination, 1))
-    try:
-        pmsg = ping_socket.recv(64)[20:]
-    except socket.timeout:
-        print("Error, timeout")
-    print(ICMP.icmp_from_raw(pmsg).checksum)
-
-
-#   sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-#   setsockopt(socket.SOL_IP, socket.IP_TTL, 1)
+    def performPing(self,destination,ttl=64):
+        ping = ICMP()
+        pmsg = None
+        address = None
+        self.ping_socket.setsockopt(socket.SOL_IP, socket.IP_TTL, ttl)
+        self.ping_socket.sendto(ICMP.build_echo_request(),(destination, 1))
+        pmsg, address = self.ping_socket.recvfrom(64)
+        return (ICMP.icmp_from_raw(pmsg[20:36]),address)
