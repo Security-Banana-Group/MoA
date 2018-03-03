@@ -26,26 +26,31 @@ class Network(object):
         self.mask =  int(self.matches.group(5))
         self.numberOfIpAdresses = 2**(32 - self.mask)
 
-
+ECHO_REPLY = 0
+ECHO_REQUEST = 8
 
 class ICMP(object):
     """
     representation representing an Echo REQUEST
     http://www.networksorcery.com/enp/protocol/icmp/msg8.htm
     """
-    ECHO_REPLY = 0
-    ECHO_REQUEST = 8
+
     code = None
     checksum = None
 
-    def __init__(self,ttl = 28):
+    def __init__(self,ttl = 28,icmpType = ECHO_REQUEST,checksum=0,identifer=0,sequenceNumber=0,time=0):
+        self.icmpType = icmpType
+        self.checksum = checksum
+        self.identifer = identifer
+        self.sequenceNumber = sequenceNumber
+        self.receivedTime = 0
         self.build_echo_header()
 
     def build_echo_header(self):
-        self.checksumHeader = struct.pack('!bbHHH',self.ECHO_REQUEST,0,0,0,0)
+        self.checksumHeader = struct.pack('!bbHHH',self.icmpType,0,0,0,0)
         self.data = struct.pack('d',time.time())
-        final_checksum = self.checksum()
-        self.finalheader =  struct.pack('!bbHHH',self.ECHO_REQUEST,0, final_checksum,0,0)
+        final_checksum = self.generate_checksum()
+        self.finalheader =  struct.pack('!bbHHH',self.icmpType,0, final_checksum,0,0)
         self.msg = self.finalheader + self.data
     def carry_around_add(self,a, b):
         """
@@ -55,7 +60,7 @@ class ICMP(object):
         c = a + b
         return (c & 0xffff) + (c >> 16)
 
-    def checksum(self):
+    def generate_checksum(self):
         """
         The checkSum of an icmp is the pair of consecutive bytes that are a 1 complements
         sum
@@ -68,7 +73,10 @@ class ICMP(object):
             sum = self.carry_around_add(sum,pair)
         return ~sum & 0xffff
 
-
+    @classmethod
+    def icmp_from_raw(self,bytes):
+            icmpType,code,checksum, identifer, sequenceNumber,time  = struct.unpack('bbHHHd',bytes)
+            return ICMP(icmpType=icmpType)
 
 
 def isValidIpAddress(address):
