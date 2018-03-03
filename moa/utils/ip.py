@@ -28,6 +28,7 @@ class Network(object):
 
 ECHO_REPLY = 0
 ECHO_REQUEST = 8
+TIME_EXCEEDED = 11
 
 class ICMP(object):
     """
