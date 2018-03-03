@@ -1,5 +1,9 @@
 import re
 import logging
+import time
+import struct
+
+
 
 regex_subnet = r'^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([0-9]|[1-2][0-9]|3[0-2])$'
 regex_address_check  = r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
@@ -27,13 +31,42 @@ class Network(object):
 class ICMP(object):
     """
     representation representing an Echo REQUEST
+    http://www.networksorcery.com/enp/protocol/icmp/msg8.htm
     """
     ECHO_REPLY = 0
     ENCO_REQUEST = 8
     code = None
     checksum = None
-    def __init(self):
+
+    def __init__(self,ipv4,ttl):
         pass
+
+    def build_echo_header():
+        self.checksumHeader = stuct.pack('!bbhhh',self.ECHO_REQUEST,0,0,0,0)
+        self.data = struct.pack('d',time.time)
+        final_checksum = self.checksum()
+
+    def _def carry_around_add(a, b):
+        """
+        If a two numbers end up being bigger then the 16 bit checksum, perform
+        a carry
+        """
+        c = a + b
+        return (c & 0xffff) + (c >> 16)
+
+    def check_sum(self):
+        """
+        The checkSum of an icmp is the pair of consecutive bytes that are a 1 complements
+        sum  
+        """
+        tot = self.checksumHeader + self.data
+        sum = 0
+        totlen = len(totlen)
+        for i in range(0,totlen,2):
+            pair = (tot[i] << 8) + tot[i+1]
+            sum += pair
+        return ~sum & 0xffff
+
 
 
 
