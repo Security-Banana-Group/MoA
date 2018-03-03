@@ -3,7 +3,7 @@ import socket
 import struct
 import sys
 import time
-from moa.utils.ip import IPV4
+from moa.utils.ip import IPV4, ICMP
 
 
 
@@ -18,10 +18,15 @@ Note this implmenetation is taken from RFC 1071.
 """
 
 
+def initSocket():
+    pass
+
 
 def performPing(destination):
     destIpv4 = IPV4(destination)
-    ping_socket = socket.socket(socket.AF_INET, socket.socket.raw,ICMP_CODE)
+    ping = ICMP()
+    ping_socket = socket.socket(socket.AF_INET, socket.SOCK_RAW,ICMP_CODE)
+    ping_socket.sendto(ping.msg,(destination, 1))
 
 
 #   sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)

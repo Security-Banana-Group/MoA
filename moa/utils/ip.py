@@ -34,19 +34,20 @@ class ICMP(object):
     http://www.networksorcery.com/enp/protocol/icmp/msg8.htm
     """
     ECHO_REPLY = 0
-    ENCO_REQUEST = 8
+    ECHO_REQUEST = 8
     code = None
     checksum = None
 
-    def __init__(self,ipv4,ttl):
-        pass
+    def __init__(self,ttl = 28):
+        self.build_echo_header()
 
-    def build_echo_header():
-        self.checksumHeader = stuct.pack('!bbhhh',self.ECHO_REQUEST,0,0,0,0)
-        self.data = struct.pack('d',time.time)
+    def build_echo_header(self):
+        self.checksumHeader = struct.pack('!bbHHH',self.ECHO_REQUEST,0,0,0,0)
+        self.data = struct.pack('d',time.time())
         final_checksum = self.checksum()
-
-    def _def carry_around_add(a, b):
+        self.finalheader =  struct.pack('!bbHHH',self.ECHO_REQUEST,0, final_checksum,0,0)
+        self.msg = self.finalheader + self.data
+    def carry_around_add(self,a, b):
         """
         If a two numbers end up being bigger then the 16 bit checksum, perform
         a carry
@@ -54,17 +55,17 @@ class ICMP(object):
         c = a + b
         return (c & 0xffff) + (c >> 16)
 
-    def check_sum(self):
+    def checksum(self):
         """
         The checkSum of an icmp is the pair of consecutive bytes that are a 1 complements
-        sum  
+        sum
         """
         tot = self.checksumHeader + self.data
         sum = 0
-        totlen = len(totlen)
+        totlen = len(tot)
         for i in range(0,totlen,2):
             pair = (tot[i] << 8) + tot[i+1]
-            sum += pair
+            sum = self.carry_around_add(sum,pair)
         return ~sum & 0xffff
 
 
