@@ -22,7 +22,7 @@ setup(name='MoA',
       zip_safe=False,
       entry_points ={
       'console_scripts': [
-                  'gateway = gateway.exec:main_func_gateway', #when I determine the main method of our tools
+                  'pytrace = moa.trace.exec:run_trace'
               ],
       })
 
