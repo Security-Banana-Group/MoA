@@ -2,7 +2,7 @@ import re
 import logging
 import time
 import struct
-
+import datetime
 
 
 regex_subnet = r'^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\/([0-9]|[1-2][0-9]|3[0-2])$'
@@ -39,23 +39,24 @@ class ICMP(object):
     code = None
     checksum = None
 
-    def __init__(self,icmpType = ECHO_REQUEST,code=0,checksum=0,identifer=0,sequenceNumber=0,recvtime=0):
+    def __init__(self,icmpType = ECHO_REQUEST,code=0,checksum=0,identifer=0,sequenceNumber=0,recvTime=0,sentTime=0):
         self.icmpType = icmpType
         self.code = code
         self.checksum = checksum
         self.identifer = identifer
         self.sequenceNumber = sequenceNumber
-        self.receivedTime = recvtime
-
+        self.receivedTime = recvTime
+        self.sentTime = sentTime
     @classmethod
     def build_echo_request(cls):
         checksumHeader = struct.pack('!bbHHH',ECHO_REQUEST,0,0,0,0)
         data = struct.pack('d',time.time())
         final_checksum = cls._generate_checksum(checksumHeader,data)
         finalheader =  struct.pack('!bbHHH',ECHO_REQUEST,0, final_checksum,0,0)
-        return finalheader + data
+        return (finalheader + data)
 
-
+    def timediff(self):
+        return (self.receivedTime - self.sentTime) * 1000
     @classmethod
     def _generate_checksum(cls,checksumHeader,data):
         """
@@ -78,9 +79,9 @@ class ICMP(object):
         return ~sum & 0xffff
 
     @classmethod
-    def icmp_from_raw(self,bytes):
-            icmpType,code,checksum, identifer, sequenceNumber,rtime  = struct.unpack('!bbHHHd',bytes)
-            return ICMP(icmpType=icmpType,code=code,checksum=checksum,identifer=identifer,sequenceNumber=sequenceNumber, recvtime=rtime )
+    def icmp_from_raw(self,bytes,rtime,stime):
+            icmpType,code,checksum, identifer, sequenceNumber, sTime = struct.unpack('!bbHHHd',bytes)
+            return ICMP(icmpType=icmpType,code=code,checksum=checksum,identifer=identifer,sequenceNumber=sequenceNumber, recvTime=rtime,sentTime=stime )
 
 
 def isValidIpAddress(address):
