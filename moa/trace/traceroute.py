@@ -5,19 +5,36 @@ import sys
 class TraceManager():
 
     def __init__(self):
-        self.pm = PingManager(timeout=4)
+        self.pm = PingManager(timeout=1)
     def performTraceroute(self,address):
         print("Performing trace route to ", address)
         ttl = 1
         done = False
-        try:
-            while not done:
-                dn = None
+        retries = 0
+
+        while not done:
+            dn = None
+            msg = None
+            recvfrom = None
+            text = "None"
+            end_text = '\n'
+            try:
                 msg,recvfrom = self.pm.performPing(address,ttl=ttl)
-                if msg.icmpType != TIME_EXCEEDED:
-                    done = True
-                print("%d %s ,%d ms" % (ttl,recvfrom[0] ,msg.timediff()))
-                ttl +=1
-        except socket.timeout:
-            print("Timeout")
-            sys.exit(1)
+                text = "%d %s ,%d ms" % (ttl,recvfrom[0] ,msg.timediff())
+            except socket.timeout:
+                end_text = ''
+                retries += 1
+                ttl -= 1
+                text =  "Timeout Retrying"
+                if retries > 1:
+                    text = " *"
+                if retries > 3:
+                   ttl += 1
+                   text = " Moving to next TTL"
+                   end_text = '\n'
+                   retries = 0
+
+            if msg is not None and msg.icmpType != TIME_EXCEEDED:
+                done = True
+            print(text, end=end_text, flush=True)
+            ttl += 1

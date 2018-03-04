@@ -16,9 +16,10 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
     if isValidIpAddress(arguments.ipaddress):
         TraceManager().performTraceroute(arguments.ipaddress)
-    try:
-        address = socket.gethostbyname(arguments.ipaddress)
-        TraceManager().performTraceroute(address)
-    except socket.gaierror:
-        print("Cannot find address \n")
-        sys.exit(1)
+    else:
+        try:
+            address = socket.gethostbyname(arguments.ipaddress)
+            TraceManager().performTraceroute(address)
+        except socket.gaierror:
+            print("Cannot find address \n")
+            sys.exit(1)
