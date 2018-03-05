@@ -1,11 +1,11 @@
 # MoA(Mission de Atacar)
-Tools for diagnosis,observing and scouting
+Tools for diagnosis, observing, and scouting
 
 # Requirements
 https://mycourses.rit.edu/d2l/le/content/686133/viewContent/5035265/View
 
 ### PyTrace(Python3)
-PyTrace is a pure python implemntation of traceroute. Current features are
+PyTrace is a pure python implementation of traceroute. Current features are
 * ICMP based packet delivery
 * Estimated Round Trips
 * Domain name represnetation of visisted points
