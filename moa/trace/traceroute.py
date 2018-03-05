@@ -38,3 +38,6 @@ class TraceManager():
                 done = True
             print(text, end=end_text, flush=True)
             ttl += 1
+
+    def closeTrace(self):
+        self.pm.closeSocket()

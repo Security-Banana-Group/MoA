@@ -28,3 +28,6 @@ class PingManager(object):
         self.ping_socket.sendto(ICMP.build_echo_request(),(destination, 1))
         pmsg, address = self.ping_socket.recvfrom(64)
         return (ICMP.icmp_from_raw(pmsg[20:36],time.time(),stime),address)
+
+    def closeSocket(self):
+        self.ping_socket.close()
