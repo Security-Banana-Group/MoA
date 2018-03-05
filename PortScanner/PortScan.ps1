@@ -116,17 +116,15 @@ if ($ip -match '-'){
     #$networkaddr = new-object net.ipaddress ($maskaddr.address -band $begin.address)
 
     $array = @()
-
-    for ($x=$int; $x -le $intend; $x++) {
-        
-        $x3 = ($x -band $begin)
-        
-        $test = ([System.Net.IPAddress]$x3).GetAddressBytes()
+    $x3 = ($int -band $begin)    
+    $count=$x3+($intend-$int)
+    for ($x=$x3; $x -le $count; $x++) {
+                
+        $test = ([System.Net.IPAddress]$x).GetAddressBytes()
         [Array]::Reverse($test)
         $test = $test -join '.'
-        if(-NOT $array.Contains($test)){
-            $array +=$test
-            }
+        #Write-Output $x3
+        $array +=$test
         }
     }
     
@@ -136,12 +134,7 @@ if ($ip -match '-'){
  $PortsArray = @()
  
  foreach($b in $ports){
-       
-    #Checks list of ports
-    if($b -lt 1 -XOR $b -gt 65535){
-        return {Invalid list of ports}
-        }
-    
+
     #If item is a range, will split and check
     if($b -match '-'){
         $portRange = $b.Split('-')
@@ -161,10 +154,17 @@ if ($ip -match '-'){
         
         }Elseif(-Not $PortsArray.Contains($b)){
         $PortsArray += $b
-        }
+        }else{
+            #Checks list of ports
+            if($b -lt 1 -XOR $b -gt 65535){
+                $b
+                return {Invalid list of ports}
+                }
+    
+            }      
     }
 
-####################################$PortsArray
+
 
 $results = @()
 $open = @()
@@ -174,8 +174,8 @@ $x1=0
 foreach($address in $array){
     
     foreach($cPort in $PortsArray){
-        $x1 +=1
-        Write-Progress “Scanning IP ”$address':'$cPort -PercentComplete (($x1/$array.Count))
+        $x1 = $x1+1
+        Write-Progress “Scanning ”$address':'$cPort -PercentComplete (($x1/($array.Count*$PortsArray.Count))*100)
 
         $object = New-Object -TypeName PSObject
         $object | Add-Member -Name 'IP' -MemberType Noteproperty -Value $address
