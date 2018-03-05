@@ -20,6 +20,9 @@ class PingManager(object):
 
 
     def performPing(self,destination,ttl=64):
+        """
+        Perform a ping on the given destination. Defaults to 64 ttl(Ubuntu)
+        """
         ping = ICMP()
         pmsg = None
         address = None

@@ -18,10 +18,10 @@ class TraceManager():
             recvfrom = None
             text = "None"
             end_text = '\n'
-            try:
+            try:# send a ping with a set ttl
                 msg,recvfrom = self.pm.performPing(address,ttl=ttl)
                 text = "%d %s ,%d ms" % (ttl,recvfrom[0] ,msg.timediff())
-            except socket.timeout:
+            except socket.timeout: #Error occurs either retry or increment ttl after so many retries
                 end_text = ''
                 retries += 1
                 ttl -= 1
@@ -34,10 +34,13 @@ class TraceManager():
                    end_text = '\n'
                    retries = 0
 
-            if msg is not None and msg.icmpType != TIME_EXCEEDED:
+            if msg is not None and msg.icmpType != TIME_EXCEEDED: # We have recieved an echo reply.
                 done = True
             print(text, end=end_text, flush=True)
             ttl += 1
 
     def closeTrace(self):
+        """
+        Close the ping socket 
+        """
         self.pm.closeSocket()

@@ -11,6 +11,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('ipaddress', help="A valid ip address to trace")
 
 def run_trace():
+    """
+    Where command arguments are parsed
+    """
     tm = TraceManager()
     arguments = parser.parse_args()
     if isValidIpAddress(arguments.ipaddress):
@@ -28,4 +31,8 @@ def run_trace():
 
 
 if __name__ == "__main__":
+    """
+    Call this module directly by using
+    python3 command.py [ARGS]
+    """
     run_trace()

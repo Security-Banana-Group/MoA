@@ -49,6 +49,9 @@ class ICMP(object):
         self.sentTime = sentTime
     @classmethod
     def build_echo_request(cls):
+        """
+        builds an echo request ICMP and returns raw byte representation 
+        """
         checksumHeader = struct.pack('!bbHHH',ECHO_REQUEST,0,0,0,0)
         data = struct.pack('d',time.time())
         final_checksum = cls._generate_checksum(checksumHeader,data)
@@ -80,6 +83,9 @@ class ICMP(object):
 
     @classmethod
     def icmp_from_raw(self,bytes,rtime,stime):
+        """
+        unpack the bytes and return and ICMP object for ease of usage
+        """
             icmpType,code,checksum, identifer, sequenceNumber, sTime = struct.unpack('!bbHHHd',bytes)
             return ICMP(icmpType=icmpType,code=code,checksum=checksum,identifer=identifer,sequenceNumber=sequenceNumber, recvTime=rtime,sentTime=stime )
 
