@@ -36,10 +36,15 @@ sudo pytrace www.w3schools.com
 ## OSDetection(Bash)
 A Tool for OS enumeration and detection
 
+* Detects OS based off of TTL from a ping
+* Regex to verify proper IPv4 formatting
+* Ability to read a file with -l flag
+
 ### Usage
 
 ```bash
-put your usage herex
+bash OS_Tool.sh
+bash OS_Tool.sh -l <IP_List.txt>
 ```
 
 ## Ping Sweep(Bash)
