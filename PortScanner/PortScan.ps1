@@ -19,7 +19,7 @@
 
 #>
 
-function leedle
+function PortScan
 {
 
 [CmdletBinding()]
@@ -87,6 +87,7 @@ if ($ip -match '-'){
     }
 
     
+    
 
     
 }Elseif($ip -match '/'){
@@ -123,14 +124,17 @@ if ($ip -match '-'){
         $test = ([System.Net.IPAddress]$x3).GetAddressBytes()
         [Array]::Reverse($test)
         $test = $test -join '.'
-        #Write-Output $test
-        $array +=$test
+        if(-NOT $array.Contains($test)){
+            $array +=$test
+            }
         }
     }
+    
 
 
 #Check and separate the input for the ports
  $PortsArray = @()
+ 
  foreach($b in $ports){
        
     #Checks list of ports
@@ -195,6 +199,7 @@ foreach($address in $array){
         $results += $object
     }
     
+
     #$lol
     #Select $results.Members type 
     #$results | Select-Object -Property 'IP Address'={$_.IP},'Open Ports'={$_.OP},'Closed Ports'={$_.CP}
