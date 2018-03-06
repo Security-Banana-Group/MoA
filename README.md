@@ -33,6 +33,13 @@ or you can use the domain name
 sudo pytrace www.w3schools.com
 ```
 
+### Without Installation
+go to moa/trace/ and execute:
+
+```bash
+python3 command.py [arguments]
+```
+
 ## OSDetection(Bash)
 A Tool for OS enumeration and detection
 
@@ -48,13 +55,24 @@ bash OS_Tool.sh -l <IP_List.txt>
 ```
 
 ## Ping Sweep(Bash)
-A Tool for detecting hosts on a given network
+A Tool for detecting hosts on a given network.
+
+### Depedencies
+ipcalc
 
 ### Usage
 
+Ping sweep takes two IP range formats.
+
 ```bash
-Put your usage here
+#Traditional Range
+bash ping_sweep 192.168.1.0-192.168.1.255
 ```
+```bash
+#CIDR notation
+bash ping_sweep 192.168.1.0/24
+```
+
 
 ## Port Scanner(Power Shell)
 A tools for scannning ports on a host in a particular network
@@ -62,14 +80,19 @@ A tools for scannning ports on a host in a particular network
 ### Usage
 
 ```bash
-Put your usage here
+#Traditional Range
+.\PortScan.ps1 192.168.1.1-192.168.1.5 20,80
+```
+
+```bash
+#Cidr Notation
+.\PortScan.ps1 192.168.1.0/24
 ```
 
 ## Priv Sec(Bash)
 Does Priv Sec Things
 
 ### Usage
-
 ```bash
-put your usage here
+bash easy_privsec
 ```
